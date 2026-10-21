@@ -10,12 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FlashcardsRouteImport } from './routes/flashcards'
+import { Route as PadiRouteImport } from './routes/padi'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ReadinessRouteImport } from './routes/readiness'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashcardsRoute = FlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PadiRoute = PadiRouteImport.update({
+  id: '/padi',
+  path: '/padi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlannerRoute = PlannerRouteImport.update({
@@ -28,35 +41,59 @@ const QuizRoute = QuizRouteImport.update({
   path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReadinessRoute = ReadinessRouteImport.update({
+  id: '/readiness',
+  path: '/readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/padi': typeof PadiRoute
   '/planner': typeof PlannerRoute
   '/quiz': typeof QuizRoute
+  '/readiness': typeof ReadinessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/padi': typeof PadiRoute
   '/planner': typeof PlannerRoute
   '/quiz': typeof QuizRoute
+  '/readiness': typeof ReadinessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/padi': typeof PadiRoute
   '/planner': typeof PlannerRoute
   '/quiz': typeof QuizRoute
+  '/readiness': typeof ReadinessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/planner' | '/quiz'
+  fullPaths: '/' | '/flashcards' | '/padi' | '/planner' | '/quiz' | '/readiness'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/planner' | '/quiz'
-  id: '__root__' | '/' | '/planner' | '/quiz'
+  to: '/' | '/flashcards' | '/padi' | '/planner' | '/quiz' | '/readiness'
+  id:
+    | '__root__'
+    | '/'
+    | '/flashcards'
+    | '/padi'
+    | '/planner'
+    | '/quiz'
+    | '/readiness'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FlashcardsRoute: typeof FlashcardsRoute
+  PadiRoute: typeof PadiRoute
   PlannerRoute: typeof PlannerRoute
   QuizRoute: typeof QuizRoute
+  ReadinessRoute: typeof ReadinessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +103,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flashcards': {
+      id: '/flashcards'
+      path: '/flashcards'
+      fullPath: '/flashcards'
+      preLoaderRoute: typeof FlashcardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/padi': {
+      id: '/padi'
+      path: '/padi'
+      fullPath: '/padi'
+      preLoaderRoute: typeof PadiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planner': {
@@ -82,13 +133,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/readiness': {
+      id: '/readiness'
+      path: '/readiness'
+      fullPath: '/readiness'
+      preLoaderRoute: typeof ReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FlashcardsRoute: FlashcardsRoute,
+  PadiRoute: PadiRoute,
   PlannerRoute: PlannerRoute,
   QuizRoute: QuizRoute,
+  ReadinessRoute: ReadinessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
