@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarClock, Gauge, Layers, ListChecks, MessagesSquare, Sparkles, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";

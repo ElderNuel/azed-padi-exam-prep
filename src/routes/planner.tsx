@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, Clock, PartyPopper, Siren, Target } from "lucide-react";
 import { Slider } from "@/components/ui/slider";

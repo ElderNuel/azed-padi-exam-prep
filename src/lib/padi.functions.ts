@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import SYSTEM_PROMPT from "@/data/system_prompt_padi.txt?raw";

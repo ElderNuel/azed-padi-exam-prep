@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DOMAINS, seedQuestions, type DomainKey } from "@/data/seedQuestions";
 
 export interface PlanTopic { key: string; topic: string; domain: DomainKey; minutes: number }

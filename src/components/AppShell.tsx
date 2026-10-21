@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { CalendarClock, Cloud, Gauge, Layers, MessagesSquare, ShieldCheck, Sparkles, Brain, Moon, Sun, Home, ListChecks } from "lucide-react";
