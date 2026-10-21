@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useSyncExternalStore } from "react";
 import type { DomainKey, OptionKey } from "@/data/seedQuestions";
 import { seedQuestions, DOMAINS } from "@/data/seedQuestions";

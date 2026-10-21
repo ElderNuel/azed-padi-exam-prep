@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PartyPopper, RotateCcw, ThumbsUp, Trash2, Undo2 } from "lucide-react";

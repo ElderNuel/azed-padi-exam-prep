@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Crosshair, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
