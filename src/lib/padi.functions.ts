@@ -19,19 +19,41 @@ export const askPadi = createServerFn({ method: "POST" })
       .replaceAll("{{DAYS_LEFT}}", String(data.daysLeft))
       .replaceAll("{{WEAK_DOMAINS}}", data.weakDomains.join(", ") || "none")
       .replaceAll("{{DISPLAY_NAME}}", "");
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      headers: { "Lovable-API-Key": key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", "X-Lovable-AIG-SDK": "fetch" },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [{ role: "system", content: system }, ...data.messages],
+        model: "openai/gpt-6-astra",
+        instructions: system,
+        input: data.messages.map((m) => ({ role: m.role, content: m.content })),
+        reasoning: { effort: "low" },
+        store: false,
+        stream: true,
       }),
     });
     if (res.status === 429) return { answer: "Padi is getting too many questions right now. Wait a moment and try again.", error: true };
     if (res.status === 402) return { answer: "AI credits have run out for this workspace. Add credits to keep chatting with Padi.", error: true };
-    if (!res.ok) return { answer: "Padi hit a snag. Please try again.", error: true };
-    const json = await res.json();
-    const raw: string = json.choices?.[0]?.message?.content ?? "";
+    if (!res.ok || !res.body) return { answer: "Padi hit a snag. Please try again.", error: true };
+    let raw = "";
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split("\n");
+      buf = lines.pop() ?? "";
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const ev = JSON.parse(payload);
+          if (ev.type === "response.output_text.delta" && typeof ev.delta === "string") raw += ev.delta;
+        } catch { /* partial */ }
+      }
+    }
     const m = raw.match(/<answer>([\s\S]*?)<\/answer>/i);
     const answer = (m ? m[1] : raw.replace(/<scratchpad>[\s\S]*?<\/scratchpad>/gi, "").replace(/<meta>[\s\S]*?<\/meta>/gi, "")).trim();
     const meta = raw.match(/<meta>([\s\S]*?)<\/meta>/i)?.[1]?.trim();
