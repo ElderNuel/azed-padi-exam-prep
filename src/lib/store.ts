@@ -2,6 +2,8 @@
 import { useSyncExternalStore } from "react";
 import type { DomainKey, OptionKey } from "@/data/seedQuestions";
 import { seedQuestions, DOMAINS } from "@/data/seedQuestions";
+import { initializeStorage, writeProgress } from '@/services/storageService';
+import { freshProgress, judgeProgress, type Progress } from '@/services/progress';
 
 export type Vibe = "en" | "pcm" | "sw";
 export const VIBES: Record<Vibe, string> = {
@@ -11,9 +13,12 @@ export const VIBES: Record<Vibe, string> = {
 };
 
 export interface Bookmark { id: string; title: string; analogy: string; source: "quiz" | "chat"; at: number }
-export interface Attempt { qid: number; chosen: OptionKey; correct: boolean; at: number }
+export interface Attempt { qid: number; chosen: OptionKey; correct: boolean; at: number; domain: DomainKey }
 
 export interface AppState {
+  displayName: string;
+  examDate: string;
+  judgeDemo: boolean;
   vibe: Vibe;
   daysLeft: number;
   hours: number;
@@ -25,52 +30,23 @@ export interface AppState {
   lastExam?: { score: number; total: number; at: number; timedOut: boolean };
 }
 
-const KEY = "azedpadi:v1:state";
-const DEFAULT: AppState = {
-  vibe: "en", daysLeft: 4, hours: 3, plannerChecks: {}, attempts: {}, mistakes: [], bookmarks: [], mastered: [],
-};
+const DEFAULT: AppState = freshProgress();
 
 let state: AppState = DEFAULT;
 let loaded = false;
 const listeners = new Set<() => void>();
-let syncTimer: ReturnType<typeof setTimeout> | undefined;
-
-export function deviceId() {
-  let id = localStorage.getItem("azedpadi:v1:device");
-  if (!id) { id = crypto.randomUUID(); localStorage.setItem("azedpadi:v1:device", id); }
-  return id;
-}
 
 /** Called once on the client: reads localStorage, then tries Cloud for a newer copy. */
 export function hydrateStore() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) state = { ...DEFAULT, ...JSON.parse(raw) };
-  } catch { /* ignore */ }
-  listeners.forEach((l) => l());
-  import("./sync.functions").then(({ pullProgress }) =>
-    pullProgress({ data: { deviceId: deviceId() } }).then((r) => {
-      if (r?.state && Object.keys(r.state).length && !localStorage.getItem(KEY)) {
-        state = { ...DEFAULT, ...(r.state as AppState) };
-        localStorage.setItem(KEY, JSON.stringify(state));
-        listeners.forEach((l) => l());
-      }
-    }),
-  ).catch(() => { /* offline: localStorage fallback */ });
+  initializeStorage((saved) => {state=saved;listeners.forEach(l=>l());});
 }
 
 export function setState(fn: (s: AppState) => AppState) {
   state = fn(state);
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ }
+  writeProgress(state as Progress);
   listeners.forEach((l) => l());
-  clearTimeout(syncTimer);
-  syncTimer = setTimeout(() => {
-    import("./sync.functions").then(({ pushProgress }) =>
-      pushProgress({ data: { deviceId: deviceId(), state } }),
-    ).catch(() => { /* stays in localStorage */ });
-  }, 1500);
 }
 
 export function useApp(): AppState {
@@ -82,12 +58,19 @@ export function useApp(): AppState {
 }
 
 export function recordAttempt(qid: number, chosen: OptionKey, correct: boolean) {
+  const question = seedQuestions.find(q => q.id === qid);
+  if (!question) return;
+  correct = chosen === question.correct_option;
   setState((s) => ({
     ...s,
-    attempts: { ...s.attempts, [qid]: { qid, chosen, correct, at: Date.now() } },
+    judgeDemo: false,
+    attempts: { ...s.attempts, [qid]: { qid, domain: question.domain_key, chosen, correct, at: Date.now() } },
     mistakes: correct ? s.mistakes.filter((m) => m !== qid) : Array.from(new Set([...s.mistakes, qid])),
   }));
 }
+
+export function seedJudgeDemo() { setState(s=>judgeProgress(s as Progress)); }
+export function resetProgress() { setState(s=>({...freshProgress(),displayName:s.displayName,examDate:s.examDate,vibe:s.vibe})); }
 
 export function addBookmark(b: Omit<Bookmark, "at">) {
   setState((s) => s.bookmarks.some((x) => x.id === b.id) ? s : { ...s, bookmarks: [{ ...b, at: Date.now() }, ...s.bookmarks] });
