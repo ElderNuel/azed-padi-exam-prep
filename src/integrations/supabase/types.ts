@@ -32,12 +32,117 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          daily_hours: number
+          display_name: string
+          exam_date: string | null
+          id: string
+          preferred_language: string
+        }
+        Insert: {
+          daily_hours?: number
+          display_name?: string
+          exam_date?: string | null
+          id: string
+          preferred_language?: string
+        }
+        Update: {
+          daily_hours?: number
+          display_name?: string
+          exam_date?: string | null
+          id?: string
+          preferred_language?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          chosen_option: string
+          domain: string
+          is_correct: boolean
+          question_id: number
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          chosen_option: string
+          domain: string
+          is_correct: boolean
+          question_id: number
+          timestamp: string
+          user_id: string
+        }
+        Update: {
+          chosen_option?: string
+          domain?: string
+          is_correct?: boolean
+          question_id?: number
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_padi_analogies: {
+        Row: {
+          analogy: string
+          id: string
+          source: string
+          timestamp: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          analogy: string
+          id: string
+          source: string
+          timestamp: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          analogy?: string
+          id?: string
+          source?: string
+          timestamp?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_plans: {
+        Row: {
+          completed_topics: Json
+          daily_hours: number
+          days_left: number
+          state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_topics?: Json
+          daily_hours?: number
+          days_left?: number
+          state?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_topics?: Json
+          daily_hours?: number
+          days_left?: number
+          state?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      save_learner_progress: { Args: { payload: Json }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
