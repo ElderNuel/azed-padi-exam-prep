@@ -1,7 +1,9 @@
 // AZed Padi question bank. Original practice items, not real exam content.
-// To replace/extend: paste a new array into `seedQuestions` keeping the same shape.
+// To replace/extend: paste a full 1–50 array into `seedQuestions` keeping this shape.
 export type DomainKey = "d1" | "d2" | "d3";
 export type OptionKey = "A" | "B" | "C" | "D";
+export type QuizInteraction = "multiple_choice" | "dropdown" | "drag_and_drop";
+
 export interface Question {
   id: number;
   domain: string;
@@ -18,12 +20,29 @@ export interface Question {
   exam_trap_warning: string;
 }
 
+export const OPTION_KEYS: OptionKey[] = ["A", "B", "C", "D"];
+
 export const DOMAINS: Record<DomainKey, { name: string; short: string; weight: string; factor: number }> = {
   d1: { name: "Describe Cloud Concepts", short: "Cloud Concepts", weight: "25–30%", factor: 0.275 },
   d2: { name: "Describe Azure Architecture and Services", short: "Architecture & Services", weight: "35–40%", factor: 0.375 },
   d3: { name: "Describe Azure Management and Governance", short: "Management & Governance", weight: "30–35%", factor: 0.35 },
 };
 
+/** Maps authored labels (`Scenario Decision`, `Service Matching`) onto exam-style interactions. */
+export function quizInteraction(q: Question): QuizInteraction {
+  const t = q.question_type.toLowerCase().replace(/[\s-]+/g, "_");
+  if (t === "drag_and_drop" || t.includes("drag")) return "drag_and_drop";
+  if (t === "dropdown") return "dropdown";
+  if (t.includes("matching") || t.includes("service")) {
+    return q.id % 2 === 0 ? "drag_and_drop" : "dropdown";
+  }
+  return "multiple_choice";
+}
+
+/**
+ * Full bank lives in `seedQuestions` (ids 1–50).
+ * `starterQuestions` is the first 12 across all three domains — handy for demos;
+ */
 export const seedQuestions: Question[] = [
   {
     "id": 1,
@@ -195,7 +214,7 @@ export const seedQuestions: Question[] = [
     "question": "Which set always remains the SACCO's responsibility?",
     "options": {
       "A": "Physical datacenter security, power, and cooling",
-      "B": "Its information and data, the devices allowed to connect, and the accounts and identities of its people",
+      "B": "Its information and data, the devices allowed to connect, and the accounts and identities of people",
       "C": "Patching the host infrastructure that runs the service",
       "D": "Maintaining the vendor's application code and updates"
     },
@@ -1026,3 +1045,11 @@ export const seedQuestions: Question[] = [
     "domain_key": "d3"
   }
 ];
+
+export const starterQuestions: Question[] = (["d1", "d2", "d3"] as DomainKey[]).flatMap((key) =>
+  seedQuestions.filter((q) => q.domain_key === key).slice(0, 4)
+);
+
+export function questionsByDomain(key: DomainKey): Question[] {
+  return seedQuestions.filter((q) => q.domain_key === key);
+}

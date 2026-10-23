@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { XRayDialog } from "@/components/XRayDialog";
 import { hydrateStore, setState, useApp, VIBES, type Vibe } from "@/lib/store";
+import { useSyncStatus } from "@/services/storageService";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -29,10 +30,7 @@ export function UnofficialBadge({ className }: { className?: string }) {
 function Brand() {
   return (
     <Link to="/" className="flex items-center gap-2.5">
-      <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-brand shadow-glow">
-        <Cloud className="h-5 w-5 text-background" strokeWidth={2.5} />
-        <Sparkles className="absolute -right-1 -top-1 h-3.5 w-3.5 text-amber" />
-      </span>
+      <img src="/logo.png" alt="AZed Padi Logo" className="h-9 w-9 rounded-xl object-contain" />
       <span className="leading-none">
         <span className="block font-display text-lg font-extrabold tracking-tight">AZed <span className="text-gradient-brand">Padi</span></span>
         <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">AZ-900 prep</span>
@@ -59,6 +57,21 @@ function VibePill() {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function SyncPill() {
+  const { status, signedIn } = useSyncStatus();
+  const label =
+    status === "synced" ? "Cloud synced" :
+    status === "syncing" ? "Syncing…" :
+    status === "offline" ? "Offline · local save" :
+    status === "memory" ? "Memory only" :
+    signedIn ? "Local + cloud" : "Saved on this device";
+  return (
+    <span className="hidden rounded-full border border-border bg-muted/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground lg:inline-flex">
+      {label}
+    </span>
   );
 }
 
@@ -96,6 +109,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span className="ml-1 inline-flex rounded-full border border-amber/40 bg-amber/10 px-2 py-0.5 text-[10px] font-bold uppercase text-amber xl:hidden">Unofficial Prep</span>
           <div className="ml-auto flex items-center gap-2">
             <VibePill />
+            <SyncPill />
             <Button size="sm" variant="xray" onClick={() => setXray(true)}>
               <Brain className="h-4 w-4" /> <span className="hidden sm:inline">Prompt X-Ray</span>
             </Button>

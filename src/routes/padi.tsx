@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DomainBadge, vibeIntro, WeightStrip } from "@/components/DomainBadge";
 import { glossary } from "@/data/glossary";
 import { askPadi } from "@/lib/padi.functions";
+import { offlinePadiAnswer } from "@/lib/padiOffline";
 import { addBookmark, domainStats, useApp } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -120,9 +121,13 @@ function PadiChat({ open, onOpenChange, seed }: { open: boolean; onOpenChange: (
       .map((d) => ({ d1: "cloud_concepts", d2: "architecture_services", d3: "management_governance" } as const)[d.key]);
     try {
       const r = await askPadi({ data: { language: s.vibe, daysLeft: s.daysLeft, weakDomains: weak, messages: next.slice(-12).map(({ role, content }) => ({ role, content })) } });
-      setMsgs((m) => [...m, { role: "assistant", content: r.answer, verified: r.verified }]);
+      if (r?.error) {
+        setMsgs((m) => [...m, { role: "assistant", content: offlinePadiAnswer(content, s.vibe), verified: false }]);
+      } else {
+        setMsgs((m) => [...m, { role: "assistant", content: r.answer, verified: r.verified }]);
+      }
     } catch {
-      setMsgs((m) => [...m, { role: "assistant", content: "Padi couldn't connect. Check your network and try again." }]);
+      setMsgs((m) => [...m, { role: "assistant", content: offlinePadiAnswer(content, s.vibe), verified: false }]);
     } finally { setBusy(false); }
   };
 

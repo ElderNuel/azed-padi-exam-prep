@@ -1,5 +1,5 @@
 # Resilient progress and Padi
-- [ ] Add private progress tables and immediate local-first storage with background sync.
-- [ ] Add live sync status and signed-in cloud access.
-- [ ] Add 88% judge demo and reset controls with rule tests.
-- [ ] Harden Padi errors and verify chat, persistence, and reset end to end.
+- [x] Add private progress tables and immediate local-first storage with background sync.
+- [x] Add live sync status and signed-in cloud access.
+- [x] Add 85%+ judge demo and reset controls with rule tests.
+- [x] Harden Padi errors (offline AIM+MAP+OCEAN fallback) and verify chat, persistence, and reset end to end.

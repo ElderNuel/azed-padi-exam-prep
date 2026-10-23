@@ -35,7 +35,7 @@ function Index() {
       <section className="relative overflow-hidden rounded-3xl border bg-card/70 p-6 shadow-card sm:p-10">
         <div className="max-w-2xl space-y-5">
           <span className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-            <Sparkles className="h-3.5 w-3.5" /> Exam in a few days? Breathe. Padi dey here.
+            <Sparkles className="h-3.5 w-3.5" /> Exam in a few days? Breathe. Padi dey for you. 😎
           </span>
           <h1 className="text-4xl font-extrabold leading-[1.05] sm:text-6xl">
             From exam panic to <span className="text-gradient-brand">AZ-900 confidence.</span>

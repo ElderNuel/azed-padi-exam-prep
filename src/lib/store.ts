@@ -15,20 +15,7 @@ export const VIBES: Record<Vibe, string> = {
 export interface Bookmark { id: string; title: string; analogy: string; source: "quiz" | "chat"; at: number }
 export interface Attempt { qid: number; chosen: OptionKey; correct: boolean; at: number; domain: DomainKey }
 
-export interface AppState {
-  displayName: string;
-  examDate: string;
-  judgeDemo: boolean;
-  vibe: Vibe;
-  daysLeft: number;
-  hours: number;
-  plannerChecks: Record<string, boolean>;
-  attempts: Record<number, Attempt>; // latest attempt per question
-  mistakes: number[];
-  bookmarks: Bookmark[];
-  mastered: string[];
-  lastExam?: { score: number; total: number; at: number; timedOut: boolean };
-}
+export type AppState = Progress;
 
 const DEFAULT: AppState = freshProgress();
 
@@ -47,6 +34,10 @@ export function setState(fn: (s: AppState) => AppState) {
   state = fn(state);
   writeProgress(state as Progress);
   listeners.forEach((l) => l());
+}
+
+export function getState(): AppState {
+  return state;
 }
 
 export function useApp(): AppState {
@@ -71,6 +62,10 @@ export function recordAttempt(qid: number, chosen: OptionKey, correct: boolean) 
 
 export function seedJudgeDemo() { setState(s=>judgeProgress(s as Progress)); }
 export function resetProgress() { setState(s=>({...freshProgress(),displayName:s.displayName,examDate:s.examDate,vibe:s.vibe})); }
+
+export function clearExamDraft() {
+  setState((s) => ({ ...s, examDraft: undefined }));
+}
 
 export function addBookmark(b: Omit<Bookmark, "at">) {
   setState((s) => s.bookmarks.some((x) => x.id === b.id) ? s : { ...s, bookmarks: [{ ...b, at: Date.now() }, ...s.bookmarks] });

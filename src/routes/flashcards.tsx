@@ -56,12 +56,26 @@ function Deck() {
   const s = useApp();
   const [queue, setQueue] = useState<string[]>([]);
   const [flipped, setFlipped] = useState(false);
-  useEffect(() => { setQueue(DECK.filter((c) => !s.mastered.includes(c.id)).map((c) => c.id)); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [s.mastered.length === 0]);
+  const masteredKey = s.mastered.slice().sort().join("|");
+  useEffect(() => {
+    setQueue(DECK.filter((c) => !s.mastered.includes(c.id)).map((c) => c.id));
+    setFlipped(false);
+    // Rebuild when the mastered set changes (hydrate, Got It, or Reset) — not on Still Confusing reorder.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [masteredKey]);
 
   const mastered = DECK.filter((c) => s.mastered.includes(c.id)).length;
   const card = DECK.find((c) => c.id === queue[0]);
 
-  const confusing = () => { setFlipped(false); setQueue((q) => [...q.slice(1, 3), q[0], ...q.slice(3)].filter(Boolean)); };
+  const confusing = () => {
+    setFlipped(false);
+    setQueue((q) => {
+      const [current, next, ...rest] = q;
+      if (!current) return q;
+      if (!next) return [current];
+      return [next, current, ...rest];
+    });
+  };
   const gotIt = () => {
     if (!card) return;
     setFlipped(false);

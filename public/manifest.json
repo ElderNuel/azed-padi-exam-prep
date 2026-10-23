@@ -1,0 +1,21 @@
+{
+  "name": "AZed Padi - Unofficial AZ-900 Exam Prep",
+  "short_name": "AZed Padi",
+  "description": "50 scenario-based questions and African analogies for AZ-900 exam prep.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#0EA5E9",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ const input = z.object({
 });
 
 export const askPadi = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) => input.parse(d))
+  .validator((d: unknown) => input.parse(d))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) return { answer: "Padi is offline right now. Try again shortly.", error: true };

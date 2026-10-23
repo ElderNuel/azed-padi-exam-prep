@@ -73,7 +73,7 @@ function Readiness() {
             <DomainBadge d={d.key} />
             <h3 className="font-bold">{DOMAINS[d.key].name}</h3>
             <p className="font-display text-4xl font-extrabold">{d.accuracy}%</p>
-            <div className="h-2 overflow-hidden rounded-full bg-muted"><div className={cn("h-full", `bg-${d.key}`)} style={{ width: `${d.accuracy}%` }} /></div>
+            <div className="h-2 overflow-hidden rounded-full bg-muted"><div className={cn("h-full", d.key === "d1" ? "bg-d1" : d.key === "d2" ? "bg-d2" : "bg-d3")} style={{ width: `${d.accuracy}%` }} /></div>
             <p className="text-xs text-muted-foreground">{d.done} of {d.total} domain questions completed · {d.correct} correct · 50 total in bank</p>
             <Button asChild variant={d.key === weakest.key ? "amber" : "outline"} className="w-full">
               <Link to="/quiz" search={{ mode: "study", domain: d.key }}><Crosshair /> Drill {d.key === weakest.key ? "Weakest Domain" : "This Domain"}</Link>

@@ -1,8 +1,11 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { AIM_MAP_PROMPT, OCEAN_PROMPT, SYSTEM_PROMPT } from "@/data/prompts";
+import { resetProgress, seedJudgeDemo } from "@/lib/store";
 import { Brain } from "lucide-react";
+import { toast } from "sonner";
 
 export function XRayDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const tabs = [
@@ -33,6 +36,14 @@ export function XRayDialog({ open, onOpenChange }: { open: boolean; onOpenChange
             </TabsContent>
           ))}
         </Tabs>
+        <div className="flex flex-wrap gap-2 border-t pt-3">
+          <Button size="sm" variant="success" onClick={() => { seedJudgeDemo(); toast.success("Judge demo progress loaded — check Readiness."); }}>
+            Load 85%+ judge demo
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => { resetProgress(); toast.message("Progress reset. Local + cloud will follow."); }}>
+            Reset my progress
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

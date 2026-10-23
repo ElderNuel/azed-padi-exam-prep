@@ -1,88 +1,113 @@
-# AZed Padi Exam Prep
+# 🌍 AZed Padi — Unofficial AZ-900 Exam Prep
 
-**A - ACTOR:** Act as a Principal Frontend Product Designer and Full-Stack React/TypeScript Architect specializing in high-engagement EdTech applications with Tailwind CSS, shadcn/ui, Lucide Icons, and Supabase.
+**[🌐 Live Demo](https://azedpadi.vercel.app)**
 
-**I - INPUT:** I am building **"AZed Padi - Unofficial AZ-900 Exam Prep"** for the Power Learn Project Vibe Coding Hackathon (`#1MillionDevs`). Cloud beginners are overwhelmed by massive Microsoft Learn reading lists, dry terminology, and fear of practical scenario questions when they only have days left before their exam.
+> **⚠️ UNOFFICIAL COMPLIANCE DISCLAIMER:**
+> _AZed Padi is an independent, unofficial study tool built for the Power Learn Project (PLP) Vibe Coding Hackathon (#1MillionDevs). It is NOT affiliated with, endorsed by, or sponsored by Microsoft Corporation. All 50 scenario questions are 100% original and mapped to the public 2026 Microsoft Learn AZ-900 syllabus. No official Microsoft or Azure logos are used in this project._
 
-**M - MISSION:** Build a responsive, dark/light-mode enabled, full-stack React + TypeScript + Tailwind CSS application featuring 4 integrated study modules, a "Prompt X-Ray" inspection drawer for hackathon judges, and dual-persistence storage (Supabase + automatic `localStorage` fallback).
+## 📖 The Problem Statement
 
-**M - MEMORY:** Enforce strict hackathon compliance across the entire UI:
-1. Display a prominent, stylish badge in the top navigation bar and footer: `"Unofficial AZ-900 Exam Prep Tool — Not Affiliated with Microsoft"`.
-2. Do NOT use official Microsoft or Azure logos anywhere in the interface (use custom Lucide cloud/shield/sparkles icons instead).
-3. Support all 3 official AZ-900 exam domains with their exact syllabus weights:
-   - Domain 1: Describe Cloud Concepts (25–30%)
-   - Domain 2: Describe Azure Architecture and Services (35–40%)
-   - Domain 3: Describe Azure Management and Governance (30–35%)
+African developers joining the **#1MillionDevs** movement face three massive hurdles when preparing for their first cloud certification (AZ-900):
 
-**A - ASSETS:** Structure the application around a clean data layer (`src/data/seedQuestions.ts`) capable of holding 50 scenario-based questions (`id` 1 to 50) with fields: `id`, `domain`, `domain_weight`, `topic`, `question_type`, `scenario`, `question`, `options` (A, B, C, D), `correct_option`, `explanation`, `padi_analogy`, and `exam_trap_warning`. Include 12 complete starter questions across all 3 domains immediately in `seedQuestions.ts` with a clean modular export so I can paste the full 50-question array in Cursor AI.
+1. **Information Overload & Time Crunch:** Microsoft Learn is incredibly comprehensive but overwhelming when you only have a few days left before the exam.
 
-**P - PROMPT / ACTIONS:** Build the application with a persistent top header, mobile bottom bar / desktop sidebar navigation, and the following 5 interactive features:
+2. **Fear of Practical Application:** Learners memorize definitions but freeze on scenario-based exam questions because they lack practical simulation practice.
 
-1. **Global Header & "Prompt X-Ray" Judge's Modal:**
-   - Brand logo: `"AZed Padi"` with a warm emerald-and-amber African tech aesthetic alongside Azure-inspired electric blue accents.
-   - `"Unofficial Prep"` compliance badge.
-   - `"Dialect / Vibe Selector"` pill in the header: lets the user switch Padi's explanation flavor between `"Pan-African English"`, `"Naija Pidgin Flow"`, and `"East African / Swahili Mix"`.
-   - `"🧠 Prompt X-Ray"` button: Opens a sleek modal showcasing the exact **AIM + MAP** and **OCEAN** system prompts powering the app so hackathon judges can inspect our Prompt Engineering (20% rubric score) directly in the UI.
+3. **Zero Cultural Context:** Intimidating cloud jargon (like _Availability Zones_, _LRS vs. GZRS_, or _ExpressRoute_) is explained using abstract Western corporate examples rather than relatable African commerce and logistics.
 
-2. **View 1: "Time-Crunch" Triage Study Planner (`/planner`):**
-   - Interactive slider: `"How many days until your AZ-900 exam?"` (Range: 1 to 30 days) + `"Daily study hours available"` (1 to 6 hours).
-   - Dynamic Triage Algorithm: If `< 5 days` remain, activate **"Emergency Cram Mode"**—prioritizing high-weight topics first: *Domain 2: Architecture & Services (35–40%)* and *Domain 3: Management & Governance (30–35%)*.
-   - Output an interactive, checkable day-by-day study roadmap showing exact topics to study, estimated minutes, and a `"Practice This Topic Now"` button that deep-links straight into the filtered Quiz Engine.
-   - Include a visual relief banner: `"Exam Format Reality Check: AZ-900 has ZERO live portal coding labs! You only need to master scenario decisions, drop-downs, and concept matching."`
+## 🚀 How AZed Padi Solves It
 
-3. **View 2: Scenario Smart Quiz & "Practical Simulator" (`/quiz`):**
-   - Filter bar: Filter questions by Domain, Mode (`Study Mode with Instant Feedback` vs. `Timed Exam Simulation`), or `Mistakes Review Deck`.
-   - **CRITICAL TIMED MODE REQUIREMENT:** If the user selects `Timed Exam Simulation`, the app MUST randomize the order of the 50 questions, randomize the A/B/C/D option order, and display a sticky **45:00 Minute Countdown Timer** at the top of the screen (mirroring the real AZ-900 time limit). If the timer hits `00:00`, it must auto-submit the exam and route to the Readiness Tracker.
-   - Question Card: Presents the real-world African business `scenario` in a highlighted callout box, followed by the `question` and 4 interactive option cards (`A`, `B`, `C`, `D`).
-   - Instant Remediation Flow (Study Mode Only):
-     - Upon selecting an option in Study Mode, highlight the correct option in emerald green and wrong selection in coral red.
-     - Display the technical `explanation` and the `"⚠️ Exam Trap Warning"` callout.
-     - Prominently render an interactive `"Ask AZed Padi: Break This Down with an African Analogy"` card that reveals the `padi_analogy`.
-     - Include a `"Bookmark Analogy"` button that saves the concept.
+AZed Padi is a 4-in-1 integrated web app designed to take a learner from "panicking" to "exam-ready" through contextual, scenario-driven learning:
 
-4. **View 3: "AZed Padi" Jargon Translator & Study Buddy (`/padi`):**
-   - Searchable quick-flip dictionary of the 20 toughest AZ-900 terms (including *CapEx vs. OpEx*, *Shared Responsibility*, *IaaS vs. PaaS vs. SaaS*, *Availability Zones vs. Region Pairs*, *ExpressRoute vs. VPN Gateway*, *Blob Tiers: Hot/Cool/Cold/Archive*, *LRS/ZRS/GRS/GZRS*, *Microsoft Entra ID*, *Zero Trust & 7-Layer Defense-in-Depth*, *Azure Policy vs. RBAC vs. Resource Locks*, *Azure Arc*, *Bicep vs. ARM*, *Retired TCO Calculator vs. Pricing Calculator*, *Copilot in Azure*).
-   - Each card shows: (1) The 10-Second Exam Rule, (2) The African Real-Life Analogy (Commerce, Logistics, or Everyday Life), and (3) How the Exam Tests It.
-   - Interactive AI Chat Drawer: Allows learners to type any confusing Azure question and get an instant **AIM + MAP + OCEAN** structured response from AZed Padi.
+- **📅 Time-Crunch Triage Planner:** Enter your exam date, and the app generates a dynamic study plan. Less than 5 days left? It automatically triggers "Emergency Cram Mode," prioritizing high-weight domains (35-40%).
 
-5. **View 4: Domain-Weighted Readiness Tracker (`/readiness`):**
-   - Overall Readiness Gauge (0–100%) calculated using the exact AZ-900 domain weights:
-     $$\text{Readiness} = (0.275 \times \text{Domain}_1) + (0.375 \times \text{Domain}_2) + (0.35 \times \text{Domain}_3)$$
-   - Color-coded status badge: `< 65%` ("Needs Triage — Focus on Weak Domains"), `65%–84%` ("Almost Exam Ready"), `>= 85%` ("Ready to Ace AZ-900!").
-   - Three domain progress cards showing accuracy percentage, questions completed out of 50, and a `"Drill Weakest Domain"` CTA button.
+- **⏱️ 50-Scenario Smart Quiz Engine:** A rigorous exam simulator featuring 50 original questions. In Mock Mode, it enforces a strict **45-minute countdown timer**, randomizes question order, and shuffles A/B/C/D options to prevent pattern memorization.
 
-6. View 5: Scenario Smart Quiz Engine (Interactive quiz handling \multiple_choice`, `dropdown`, and `drag_and_drop` types, instant submit feedback, "Ask Padi" button). Ensure it includes a strict 45-minute countdown timer that auto-submits when zero, and flashes red under 5 minutes.`
+- **🧠 African Analogy AI Study Buddy ("Padi"):** Built on a strictly governed Anthropic LLM, "Padi" translates tough Azure concepts into everyday African realities (e.g., comparing _Availability Zones_ to bank branches in Victoria Island, Ikeja, and Lekki on separate power grids). Available in Pan-African English, Nigerian Pidgin, and Swahili.
 
-7. **View 6 to our application: "Padi's Memory Vault" (/flashcards) — A flashcard and spaced-repetition coach for AZ-900 revision**
-- Features an interactive card stack with a smooth 3D card-flip animation (Front: Tough AZ-900 Term or Scenario Trap; Back: Technical Definition + Padi's African Analogy).
-- Includes two feedback buttons per card: "Still Confusing" (pushes card to the front of the retry queue) and "Got It, Padi!" (retires the card from the active deck).
-- Includes a sub-tab for "Bookmarked Analogies" that automatically aggregates all analogies the user saved during their quiz sessions or AI chat buddy interactions.
-- Styled with clean Tailwind cards, progress counters (e.g., "Cards Mastered: 14 / 30"), and a celebratory state when the deck is fully cleared.
+- **📊 Domain-Weighted Readiness Tracker:** Calculates your true exam readiness (0-100%) using the exact official syllabus weights (D1: 27.5%, D2: 37.5%, D3: 32.5%), pulling data seamlessly from your quiz attempts.
 
-### [OCEAN STYLING MANDATE]
-- **Original:** Design a distinctive, vibrant UI (deep slate dark mode `#0B0F19`, electric sky blue `#0EA5E9`, warm amber `#F59E0B`, emerald `#10B981`) that looks like a flagship EdTech product, not a generic template.
-- **Concrete:** Pre-populate realistic African scenarios and analogies so the app feels alive on first load.
-- **Evident:** Display clear domain weight badges (`25–30%`, `35–40%`, `30–35%`) across every view. Include a visual 45-minute countdown clock in Timed Mode.
-- **Assertive:** Micro-copy should be energetic, reassuring, and action-oriented.
-- **Narrative:** Guide the user smoothly from "Panic about the exam" -> "Triage Plan" -> "Scenario Quiz with Padi" -> "85%+ Readiness Confidence."
+## 🏗️ Architecture & Tech Stack
 
-This project was built with [Lovable](https://lovable.dev).
+**The Vibe Coding Workflow:** `Claude.ai` (Architecture & Data) ➔ `Lovable.dev + Supabase` (Scaffolding & Backend) ➔ `Cursor AI / VS Code Cline` (Logic Injection & UI Polish).
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/44b8d35c-30b2-4851-858c-2c443d3e18df).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
 ```
++-------------------------------------------------------------+
+|                AZed Padi Client (React + TS SPA)            |
+|  +--------------+  +--------------+  +-------------------+  |
+|  | Quiz Engine  |  | Triage Plan  |  | Readiness Tracker |  |
+|  +--------------+  +--------------+  +-------------------+  |
+|         |                 |                    |            |
+|         +---------+-------+---------+----------+            |
+|                   ▼                 ▼                       |
+|           [ Zustand Stores ]   [ DualAdapter ]              |
++---------------------------------------|---------------------+
+                                        | (Sync & Async Writes)
+          +-----------------------------+-----------------+
+          ▼                                               ▼
++-------------------+                           +--------------------+
+|   Local Storage   |                           |      Supabase      |
+| (Offline Fallback)|                           | (PostgreSQL + RLS) |
++-------------------+                           +---------|----------+
+                                                          ▼ (SSE)
+                                                +--------------------+
+                                                |   Edge Function    |
+                                                |    (padi-chat)     |
+                                                +---------|----------+
+                                                          ▼
+                                                +--------------------+
+                                                |   Anthropic LLM    |
+                                                +--------------------+
+
+```
+
+## 🏆 PLP Hackathon Judging Rubric Mapping
+
+| Judging Criteria (Weight)    | How AZed Padi Delivers                                                                                                                                                  |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Learning Value (25%)**     | 50 syllabus-accurate (2026) scenario questions. Mathematical domain-weighted readiness score preventing false confidence.                                               |
+| **Prompt Engineering (20%)** | Built using the **\[AIM + MAP\]** and **\[OCEAN\]** frameworks. Incorporates a Chain-of-Thought + Verifier pattern to guarantee 0% hallucinations. _(See `PROMPTS.md`)_ |
+| **UX & Vibes (15%)**         | Vibrant dark/light mode African tech aesthetic. Flashing 45-min timer. Full keyboard accessibility (keys 1-4, A-D, Enter) for rapid studying.                           |
+| **Rapid Prototyping (15%)**  | Scaffolded via AI in days. Implements a "Judge Demo Seeder" to instantly view analytics without answering 50 questions manually.                                        |
+| **Tech Creativity (15%)**    | "Dual-Persistence" adapter writes to `localStorage` instantly for zero-latency, then syncs asynchronously to Supabase when online.                                      |
+| **Presentation (10%)**       | Comprehensive markdown documentation, ASCII diagrams, and a UI "Prompt X-Ray" modal allowing judges to inspect system prompts live.                                     |
+
+## 🔗 Prompt Engineering Documentation
+
+The secret sauce behind AZed Padi is its rigorous prompt architecture. We have documented the exact prompts used to generate the app, the 50 questions, and the AI Buddy.
+👉 [**Read the Master Prompt Architecture (PROMPTS.md)**](./PROMPTS.md)
+
+## 💻 Installation & Usage
+
+### Option 1: 1-Click Live Demo & Mobile Install (PWA)
+
+AZed Padi is a Progressive Web App (PWA). You don't need an app store to install it.
+
+1. Navigate to the live deployment URL: [https://azedpadi.vercel.app](https://azedpadi.vercel.app)
+
+2. **On Android:** Tap the three dots (Chrome) and select **"Add to Home Screen"**.
+
+3. **On iOS:** Tap the Share button (Safari) and select **"Add to Home Screen"**.
+
+4. The app will launch in native full-screen mode!
+
+### Option 2: Run Locally (Developers)
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/ElderNuel/azed-padi-exam-prep.git
+
+# 2. Navigate into the directory
+cd azed-padi-exam-prep
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the development server
+npm run dev
+
+```
+
+_Note: Due to the `DualAdapter` architecture, the app works perfectly in local `study` mode without needing Supabase `.env` variables (falling back seamlessly to `localStorage`)._
+
+_Built with passion for the #1MillionDevs Movement._
